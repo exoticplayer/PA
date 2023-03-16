@@ -35,6 +35,38 @@ static int cmd_c(char *args) {
 static int cmd_q(char *args) {
   return -1;
 }
+static int cmd_si(char *args){
+		int step;
+		if(args==NULL)step=1;
+		else sscanf(args,"%d",&step);
+
+		cpu_exec(step);
+		return 0;
+}
+static int cmd_info(char *args) { 
+		if (args[0] == 'r') 
+		{ 
+			int i; 
+			for (i = R_EAX; i <= R_EDI ; i++) {
+				   	printf("$%s\t0x%08x\n", regsl[i], reg_l(i)); 
+			} 
+			printf("$eip\t0x%08x\n", cpu.eip);
+	   	} 
+		return 0; 
+}
+static int cmd_x(char *args){
+			if (args == NULL) {
+					        printf("Wrong Command!\n");
+							        return 0;
+									    }
+				int num,exprs;
+					sscanf(args,"%d%x",&num,&exprs);
+						int i;
+							for (i = 0;i < N;i ++){
+											printf("0x%8x  0x%x\n",exprs + i*32,swaddr_read(exprs + i * 32,32));
+												}
+								return 0;
+}
 
 static int cmd_help(char *args);
 
@@ -46,8 +78,11 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  {"si", "Let the programexcute N instuctions and then suspend the excution,while the N is not given,the default value is 1", cmd_si},
   /* TODO: Add more commands */
+
+  {"r","print regiester",cmd_info},
+  {"x","scan addr",cmd_x},
 
 };
 
