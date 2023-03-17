@@ -8,7 +8,12 @@
 #include <readline/history.h>
 
 void cpu_exec(uint64_t);
-
+void display_wp();
+void init_regex();
+void insert_wp(char *args);
+void delete_wp(int no);
+uint32_t expr(char *e,bool *success);
+uint32_t vaar_read(vaddr_t addr,int len);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
   static char *line_read = NULL;
@@ -43,7 +48,11 @@ static int cmd_si(char *args){
 		cpu_exec(step);
 		return 0;
 }
-static int cmd_info(char *args) { 
+static int cmd_info(char *args) {
+	   if(args==NULL){
+	   	printf("Please input the info r or info w\n");
+	   }
+	   else{
 		if (args[0] == 'r') 
 		{ 
 			int i; 
@@ -51,21 +60,68 @@ static int cmd_info(char *args) {
 				   	printf("$%s\t0x%08x\n", regsl[i], reg_l(i)); 
 			} 
 			printf("$eip\t0x%08x\n", cpu.eip);
-	   	} 
+	   	}
+		else if(args[0]=='w'){
+			display_wq();
+		}	
+		else{
+			printf("The info need 'r' or 'w'\n");
+		}
+	   }
 		return 0; 
 }
 static int cmd_x(char *args){
-			if (args == NULL) {
-					        printf("Wrong Command!\n");
-							        return 0;
-									    }
-				int num,exprs;
-					sscanf(args,"%d%x",&num,&exprs);
-						int i;
-							for (i = 0;i < N;i ++){
-											printf("0x%8x  0x%x\n",exprs + i*32,swaddr_read(exprs + i * 32,32));
-												}
-								return 0;
+		if (args == NULL) {
+			printf("Wrong Command!\n");
+			return 0;
+		}
+		int num,exprs;
+		sscanf(args,"%d%x",&num,&exprs);
+		int i;
+		for (i = 0;i < num;i ++){
+			printf("0x%8x  0x%x\n",exprs + i*32,swaddr_read(exprs + i * 32,32));
+		}
+		return 0;
+}
+static int cmd_p(char *args){
+	if(args==NULL){
+		printf("Invaild command!please input the exprssion.\n");
+
+	}
+	else{
+		init_regex();
+		bool success =true;
+		int result=expr(args,&success);
+		if(success){
+			printf("result=%d\n",result);
+		}
+		else printf("Invalid expression!\n");
+	}
+	return 0;
+}
+static int cmd_w(char *args){
+		if(args==NULL){
+			printf("Invaild command!please input the exprssion.\n");
+
+		}
+		else{
+			insert_wp(args);
+		}
+		return 0;
+		  
+}
+static int cmd_d(char *args){
+		if(args==NULL){
+            printf("Invaild command!please input the exprssion.\n");
+			          
+        }
+		else{
+			int no=atoi(args);
+			delete_wp(no);
+		}
+		return 0;
+
+
 }
 
 static int cmd_help(char *args);
@@ -81,8 +137,11 @@ static struct {
   {"si", "Let the programexcute N instuctions and then suspend the excution,while the N is not given,the default value is 1", cmd_si},
   /* TODO: Add more commands */
 
-  {"r","print regiester",cmd_info},
+  {"info","print regiester input 'r' or 'w'",cmd_info},
   {"x","scan addr",cmd_x},
+  {"p","calculate an expression",cmd_p},
+  {"w","create a watchpoint",cmd_w},
+  {"d","delete a watchpoint",cmd_d},
 
 };
 
