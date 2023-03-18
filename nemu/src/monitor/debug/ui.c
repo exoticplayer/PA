@@ -62,7 +62,7 @@ static int cmd_info(char *args) {
 			printf("$eip\t0x%08x\n", cpu.eip);
 	   	}
 		else if(args[0]=='w'){
-			display_wq();
+			printf_wq();
 		}	
 		else{
 			printf("The info need 'r' or 'w'\n");
@@ -116,8 +116,9 @@ static int cmd_d(char *args){
 			          
         }
 		else{
+			bool key=true;
 			int no=atoi(args);
-			delete_wp(no);
+			delete_wp(no,&key);
 		}
 		return 0;
 
