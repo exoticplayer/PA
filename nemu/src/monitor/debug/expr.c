@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 enum {
-  TK_NOTYPE = 256, TK_EQ,NUM,ADD,MINUS,MUL,DIV,LBRACKET,RBRACKET,REG,HEX.AND,OR,NEQ
+  TK_NOTYPE = 256, TK_EQ,NUM,ADD,MINUS,MUL,DIV,LBRACKET,RBRACKET,REG,HEX,AND,OR,NEQ
 
   /* TODO: Add more token types */
 
@@ -168,10 +168,10 @@ uint32_t expr(char *e, bool *success) {
 bool judge_exp(){
 	int cnt=0;
 	for(int i=0;i<=nr_token;i++){
-		if(token[i].type==LBRACKET){
+		if(tokens[i].type==LBRACKET){
 			cnt++;
 		}
-		else if(token[i].type==RBRACKET)
+		else if(tokens[i].type==RBRACKET)
 				cnt--;
 		if(cnt<0)
 				return false;
@@ -180,7 +180,7 @@ bool judge_exp(){
 }
 
 
-uint32_t eval(int p.int q){
+uint32_t eval(int p,int q){
 	if(p>q)
 			return -1;
 	else if(p==q){
@@ -214,7 +214,7 @@ uint32_t eval(int p.int q){
 		int op=find_dominant_operator(p,q);
 		uint32_t leftval=eval(p,op-1);
 		uint32_t rightval=eval(op+1,q);
-		switch (token[op].type){
+		switch (tokens[op].type){
 			case ADD:
 					return leftval+rightval;
 			case MINUS:
