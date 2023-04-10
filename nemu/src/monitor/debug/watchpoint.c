@@ -121,6 +121,34 @@ void display_wp() {
     wp = wp->next;
   }
 }
+bool watch_wp() {
+  bool is_success;
+  int result;
+bool has_change=false;
+  if(head == NULL) {
+    return true;
+  } 
+  WP* wptemp = head;
+  while (wptemp != NULL)
+  {
+    /* code */
+    result = expr(wptemp -> exp, &is_success);
+    if(result != wptemp -> value)
+    {
+      //wptemp -> hitNum += 1;
+      printf("Hardware watchpoint %d:%s\n", wptemp -> NO, wptemp -> exp);
+      printf("Old value:%d\nNew valus:%d\n\n", wptemp -> value, result);
+      wptemp -> value = result;
+      //return false;
+has_change=true;
+    }
+    wptemp = wptemp -> next;
+  }
+  if(has_change)
+     return false;
+  else	
+     return true;
+}
 
 int * haschanged() {
   WP *wp = head;

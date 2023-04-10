@@ -12,5 +12,6 @@ typedef struct watchpoint {
   uint32_t value;
 
 } WP;
+bool watch_wp();
 
 #endif
