@@ -137,7 +137,7 @@ bool has_change=false;
     {
       //wptemp -> hitNum += 1;
       printf("Hardware watchpoint %d:%s\n", wptemp -> NO, wptemp -> exp);
-      printf("Old value:%d\nNew valus:%d\n\n", wptemp -> value, result);
+      printf("Old value:%d\nNew valus:%d\n", wptemp -> value, result);
       wptemp -> value = result;
       //return false;
 has_change=true;
