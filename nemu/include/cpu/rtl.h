@@ -93,7 +93,7 @@ static inline void rtl_sr_l(int r, const rtlreg_t* src1) {
 
 /* RTL psuedo instructions */
 
-static inline void rtl_lr(rtlreg_t* dest, int r, int width) {
+void rtl_lr(rtlreg_t* dest, int r, int width) {
   switch (width) {
     case 4: rtl_lr_l(dest, r); return;
     case 1: rtl_lr_b(dest, r); return;
